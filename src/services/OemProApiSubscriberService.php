@@ -6,7 +6,7 @@ class OemProApiSubscriberService extends OemProApiService {
 	
 	public function Get($listID, $emailAddress) {
 		return $this->call('Get', array(
-			'ListID' => $listID,
+			'ListID' => intval($listID),
 			'EmailAddress' => $emailAddress
 		), true);
 	}
@@ -24,8 +24,8 @@ class OemProApiSubscriberService extends OemProApiService {
 	 */
 	public function Update($subscriberID, $subscriberListID, $userData) {
 		$params = array(
-			'SubscriberID' => $subscriberID,
-			'SubscriberListID' => $subscriberListID
+			'SubscriberID' => intval($subscriberID),
+			'SubscriberListID' => intval($subscriberListID)
 		);
 		
 		if(isset($userData['EmailAddress'])) $params['EmailAddress'] = $userData['EmailAddress'];
@@ -46,7 +46,7 @@ class OemProApiSubscriberService extends OemProApiService {
 		}
 		
 		$params = array(
-			'ListID' => $listID,
+			'ListID' => intval($listID),
 			'EmailAddress' => $emailAddress,
 			'IPAddress' => $ipAddress
 		);
