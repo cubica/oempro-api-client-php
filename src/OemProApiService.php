@@ -59,7 +59,7 @@ abstract class OemProApiService {
 		$jsonResponse = json_decode($response, true);
 		
 		if(!isset($jsonResponse) || !is_array($jsonResponse) || !isset($jsonResponse['Success']) || !$jsonResponse['Success']) {
-			$ex = new OemProApiException($command, $postData, $response);
+			$ex = new OemProApiException($command, $postDataEncoded, $response);
 			
 			$errorMessages = array();
 			if(isset($jsonResponse['ErrorText'])) {
