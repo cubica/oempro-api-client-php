@@ -17,13 +17,13 @@ class OemProApiSubscribersService extends OemProApiService {
 		), true);
 	}
 	
-	public function Count($listId) {
-		$getResult = $this->Get($listId, 0, 1);
+	public function Count($listId, $searchField = '', $searchKeyword = '', $segmentId = 'Active') {
+		$getResult = $this->Get($listId, 0, 1, 'SubscriberID', 'ASC', $searchField, $searchKeyword, $segmentId);
 		return intval($getResult['TotalSubscribers']);
 	}
 	
 	public function GetAll($listId, $orderField = 'SubscriberID', $orderType = 'ASC', $searchField = '', $searchKeyword = '', $segmentId = 'Active') {
-		$count = $this->Count($listId);
+		$count = $this->Count($listId, $searchField, $searchKeyword, $segmentId);
 		return $this->Get($listId, 0, $count, $orderField, $orderType, $searchField, $searchKeyword, $segmentId);
 	}
 	
