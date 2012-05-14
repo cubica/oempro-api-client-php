@@ -10,7 +10,8 @@ class OemProApiClient {
 	
 	private static $serviceNames = array(
 		'User',
-		'Subscriber'
+		'Subscriber',
+		'Subscribers'
 	);
 	
 	public function __construct($url) {
