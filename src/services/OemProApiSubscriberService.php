@@ -57,6 +57,33 @@ class OemProApiSubscriberService extends OemProApiService {
 		
 		return $this->call('Subscribe', $params, true);
 	}
+
+	public function UnsubscribeBySubscriberID($listID, $subscriberID, $campaignID = false, $emailID = false, $autoResponderID = false, $ipAddress = false) {
+		return $this->Unsubscribe($listID, 'SubscriberID', intval($subscriberID), $campaignID, $emailID, $autoResponderID, $ipAddress);
+	}
+
+	public function UnsubscribeByEmailAddress($listID, $emailAddress, $campaignID = false, $emailID = false, $autoResponderID = false, $ipAddress = false) {
+		return $this->Unsubscribe($listID, 'EmailAddress', $emailAddress, $campaignID, $emailID, $autoResponderID, $ipAddress);
+	}
+
+	private function Unsubscribe($listID, $paramName, $paramValue, $campaignID, $emailID, $autoResponderID, $ipAddress) {
+		if(empty($ipAddress)) {
+			if(isset($_SERVER['REMOTE_ADDR'])) $ipAddress = $_SERVER['REMOTE_ADDR'];
+			else $ipAddress = '127.0.0.1';
+		}
+
+		$params = array(
+			'ListID' => intval($listID),
+			$paramName => $paramValue,
+			'IPAddress' => $ipAddress
+		);
+
+		if(!empty($campaignID)) $params['CampaignID'] = intval($campaignID);
+		if(!empty($emailID)) $params['EmailID'] = intval($emailID);
+		if(!empty($autoResponderID)) $params['AutoResponderID'] = intval($autoResponderID);
+
+		return $this->call('Unsubscribe', $params, true);
+	}
 	
 	protected function getErrorMessage($subCommand, $errorCode, $response) {
 		if($subCommand == 'Subscribe') {
@@ -118,6 +145,18 @@ class OemProApiSubscriberService extends OemProApiService {
 					if(isset($response['ErrorCustomFieldDescriptions'])) $message .= '. Field descriptions: ' . $response['ErrorCustomFieldDescriptions'];
 					return $message;
 				case 7: return 'Duplicate';
+			}
+		}
+		else if($subCommand = 'Unsubscribe') {
+			switch($errorCode) {
+				case 3: return 'Missing EmailAddress or SubscriberID parameter';
+				case 4: return 'Invalid ListID';
+				case 5: return 'Invalid List';
+				case 6: return 'Invalid EmailAddress';
+				case 7: return 'Invalid Subscriber';
+				case 8: return 'Invalid CampaignID or AutoResponderID';
+				case 9: return 'Subscriber already unsubscribed';
+				case 10: return 'Invalid EmailID';
 			}
 		}
 		
